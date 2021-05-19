@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
+import datetime
 
 
 st.title("Oriental Lounge Tracker")
@@ -22,16 +23,22 @@ show_shop_list = st.multiselect('select area(s)', shops)
 show_date = st.date_input("select date")
 # mode = st.radio("select mode", ("separate", "overlay"))
 
+next_show_date = show_date + datetime.timedelta(days=1)
+opentime = datetime.time(18, 0, 0)
+closetime = datetime.time(5, 0, 0)
+open_datetime = datetime.datetime.combine(show_date, opentime)
+close_datetime = datetime.datetime.combine(next_show_date, closetime)
+
 show_list = ["date"]
 for shop in show_shop_list:
     show_list.append("man_" + shop)
     show_list.append("woman_" + shop)
 
-for i, date in enumerate(df["date"]):
-    if show_date.day == date.day and date.hour == 18:
-        show_df = df.iloc[i:i + 66, :]
-        show_df = show_df[show_list]
-        break
+df = df.set_index("date")
+show_df = df.loc[open_datetime: close_datetime, :]
+show_df.reset_index(inplace=True)
+show_df.rename(columns={"index": "date"}, inplace=True)
+show_df = show_df[show_list]
 
 # if mode == "separate":
 #     figs = []
@@ -48,6 +55,9 @@ for col in show_list:
 fig.update_layout(legend={"x": 0, "y": -0.2, "yanchor": "top"})
 fig.update_layout(margin={"l": 0, "r": 0, "t": 0, "b": 0})
 st.plotly_chart(fig)
+
+with st.beta_expander("show data"):
+    st.write(show_df)
 
 # except Exception as e:
 #     st.info(e)
