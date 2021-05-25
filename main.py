@@ -10,7 +10,7 @@ link = '[Oriental Lounge](https://oriental-lounge.com/)'
 st.markdown(link, unsafe_allow_html=True)
 
 # try:
-DATABASE_URL = 'postgresql://uobmebyzrrghgx:2f7245be13f63c9885c843551a27ea1d6ffa5dbb7b043df593ac0910d8455b61@ec2-18-233-83-165.compute-1.amazonaws.com:5432/davgkjq1u2a64q'
+DATABASE_URL = st.secrets["DATABASE_URL"]
 engine = create_engine(DATABASE_URL)
 
 df = pd.read_sql(sql='SELECT * FROM data;', con=engine)
