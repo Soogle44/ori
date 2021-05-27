@@ -54,7 +54,7 @@ for col in show_list:
 
 fig.update_layout(legend={"x": 0, "y": -0.2, "yanchor": "top"})
 fig.update_layout(margin={"l": 0, "r": 0, "t": 0, "b": 0})
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 with st.beta_expander("show data"):
     st.write(show_df)
